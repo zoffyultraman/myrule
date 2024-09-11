@@ -1,0 +1,26 @@
+name: "Tieba"
+desc: "Tieba"
+icon: "https://github.com/Toperlock/Quantumult/raw/main/icon/Doraemon/Doraemon-1089.png"
+
+http:
+  mitm:
+    - "c.tieba.baidu.com"
+  script:
+    - match: https?:\/\/(c\.tieba\.baidu\.com|180\.97\.\d+\.\d+)\/c\/s\/login
+      name: tieba
+      type: request
+      require-body: true
+      timeout: 120
+cron:
+  # 定时执行 JavaScript 脚本
+  script:
+    - name: tieba # 引用 script-providers 中的脚本
+      cron: '* * * * *' # cron 表达式，可以在 https://crontab.guru/ 获取更多介绍
+      timeout: 10 # script timeout in second (optional)
+      argument: '' # script argument (optional)
+      debug: false # 开发模式，每次执行前会从 provider 加载最新脚本
+
+script-providers:
+  tieba:
+    url: https://raw.githubusercontent.com/NobyDa/Script/master/BDTieBa-DailyBonus/TieBa.js
+    interval: 86400
