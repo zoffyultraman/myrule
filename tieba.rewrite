@@ -15,7 +15,7 @@ cron:
   # 定时执行 JavaScript 脚本
   script:
     - name: tieba # 引用 script-providers 中的脚本
-      cron: '* * * * *' # cron 表达式，可以在 https://crontab.guru/ 获取更多介绍
+      cron: '0,1,2, 0 * * *' # cron 表达式，可以在 https://crontab.guru/ 获取更多介绍
       timeout: 10 # script timeout in second (optional)
       argument: '' # script argument (optional)
       debug: false # 开发模式，每次执行前会从 provider 加载最新脚本
