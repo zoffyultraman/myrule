@@ -16,7 +16,7 @@ jobs:
       - name: Download and convert AdBlock list
         run: |
           curl -sSL https://testingcf.jsdelivr.net/gh/GeQ1an/Rules@master/QuantumultX/Filter/AdBlock.list \
-            | sed 's/host-suffix/DOMAIN-SUFFIX/g' > AdBlock
+            | sed 's/host-suffix/DOMAIN-SUFFIX/g' > AdBlock.list
 
       - name: Commit and push changes
         run: |
