@@ -2,10 +2,12 @@ name: Sync AdBlock Rules
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # 每天凌晨3点（UTC）
-  workflow_dispatch:       # 允许手动运行
+    - cron: "0 3 * * *"   # 每天凌晨3点 UTC（北京时间11点）
+  workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: write   # 允许推送代码
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -15,13 +17,26 @@ jobs:
 
       - name: Download and convert AdBlock list
         run: |
+          set -e
           curl -sSL https://testingcf.jsdelivr.net/gh/GeQ1an/Rules@master/QuantumultX/Filter/AdBlock.list \
-            | sed 's/HOST-SUFFIX/DOMAIN-SUFFIX/g' > AdBlock.list
+            | sed 's/HOST-SUFFIX/DOMAIN-SUFFIX/g' \
+            | grep -v '^[[:space:]]*$' \
+            | grep -v '^#' > AdBlock.list
+
+      - name: Check if AdBlock changed
+        id: check_diff
+        run: |
+          if git diff --quiet AdBlock; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Commit and push changes
+        if: steps.check_diff.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add AdBlock
-          git commit -m "Sync AdBlock list $(date -u '+%Y-%m-%d %H:%M:%S')" || echo "No changes"
+          git commit -m "Sync AdBlock list $(date -u '+%Y-%m-%d %H:%M:%S')"
           git push
