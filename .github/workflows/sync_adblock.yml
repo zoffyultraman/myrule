@@ -4,7 +4,8 @@ on:
   schedule:
     - cron: "0 3 * * *"   # 每天凌晨3点（UTC）
   workflow_dispatch:       # 允许手动运行
-
+permissions:
+  contents: write
 jobs:
   update:
     runs-on: ubuntu-latest
